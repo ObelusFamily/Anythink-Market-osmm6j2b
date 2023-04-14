@@ -5,6 +5,7 @@ var Comment = mongoose.model("Comment");
 var User = mongoose.model("User");
 var auth = require("../auth");
 const { sendEvent } = require("../../lib/event");
+const { getImageByPromt } = require("../../lib/openai");
 
 // Preload item objects on routes with ':item'
 router.param("item", function(req, res, next, slug) {
@@ -184,6 +185,8 @@ router.put("/:item", auth.required, function(req, res, next) {
 
       if (typeof req.body.item.image !== "undefined") {
         req.item.image = req.body.item.image;
+      } else {
+        req.item.image =  'https://cs14.pikabu.ru/oaidalleapiprodscus.blob.core.windows.net/2023/04/14/0/1681421222166320376.jpg';
       }
 
       if (typeof req.body.item.tagList !== "undefined") {
