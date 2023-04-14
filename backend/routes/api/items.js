@@ -173,7 +173,7 @@ router.get("/:item", auth.optional, function(req, res, next) {
 
 // update item
 router.put("/:item", auth.required, function(req, res, next) {
-  User.findById(req.payload.id).then(async function(user) {
+  User.findById(req.payload.id).then(function(user) {
     if (req.item.seller._id.toString() === req.payload.id.toString()) {
       if (typeof req.body.item.title !== "undefined") {
         req.item.title = req.body.item.title;
@@ -186,7 +186,7 @@ router.put("/:item", auth.required, function(req, res, next) {
       if (typeof req.body.item.image !== "undefined") {
         req.item.image = req.body.item.image;
       } else {
-        req.item.image = await getImageByPromt(req.item.title);
+        req.item.image =  'https://cs14.pikabu.ru/oaidalleapiprodscus.blob.core.windows.net/2023/04/14/0/1681421222166320376.jpg';
       }
 
       if (typeof req.body.item.tagList !== "undefined") {
