@@ -5,6 +5,7 @@ var Comment = mongoose.model("Comment");
 var User = mongoose.model("User");
 var auth = require("../auth");
 const { sendEvent } = require("../../lib/event");
+const { getImageByPromt } = require("../../lib/openai");
 
 // Preload item objects on routes with ':item'
 router.param("item", function(req, res, next, slug) {
@@ -172,7 +173,7 @@ router.get("/:item", auth.optional, function(req, res, next) {
 
 // update item
 router.put("/:item", auth.required, function(req, res, next) {
-  User.findById(req.payload.id).then(function(user) {
+  User.findById(req.payload.id).then(async function(user) {
     if (req.item.seller._id.toString() === req.payload.id.toString()) {
       if (typeof req.body.item.title !== "undefined") {
         req.item.title = req.body.item.title;
@@ -184,6 +185,8 @@ router.put("/:item", auth.required, function(req, res, next) {
 
       if (typeof req.body.item.image !== "undefined") {
         req.item.image = req.body.item.image;
+      } else {
+        req.item.image = await getImageByPromt(req.item.title);
       }
 
       if (typeof req.body.item.tagList !== "undefined") {
